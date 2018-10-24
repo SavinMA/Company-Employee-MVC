@@ -47,27 +47,18 @@ namespace MyWeb.Controllers
                     emps = emps.OrderBy(s => s.Name);
                     break;
             }
+            ViewData["Message"] = "Сотрудники";
+
             return View(await emps.AsNoTracking().ToListAsync());
         }
 
-        /*public IActionResult Emp()
+        public IActionResult Company()
         {
-            return View();
-        }*/
-
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            ViewData["Message"] = "Компании";
+            return View(db.Companies);
         }
 
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
+        //ToDo add controller EDIT & DELETE
 
         public IActionResult Privacy()
         {

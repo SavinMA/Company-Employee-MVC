@@ -1,0 +1,22 @@
+﻿@using MyWeb.Models
+@{
+    ViewData["Title"] = "Компании";
+}
+@model IEnumerable<Company>
+
+<h1>@ViewData["Message"]</h1>
+<table class="table">
+    <tr>
+        <th>
+             Имя
+        </th>
+    </tr>
+    @foreach (Company c in Model)
+    {
+        <tr>
+            <td>
+                @c.Name
+            </td>
+        </tr>
+    }
+</table> 
