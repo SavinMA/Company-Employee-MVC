@@ -1,10 +1,10 @@
 ﻿@using MyWeb.Models
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Сотрудники";
 }
 @model IEnumerable<Emp>
 
-<h1>Сотрудники</h1>
+<h1>@ViewData["Message"]</h1>
 <table class="table">
     <tr>
         <th>
@@ -34,6 +34,10 @@
             </td>
             <td>
                 @e.Company.Name
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="Home" asp-route-id="@e.Id">Изменить</a>
+                <a asp-action="Delete" asp-controller="Home" asp-route-id="@e.Id">Удалить</a>
             </td>
         </tr>
     }
