@@ -1,0 +1,40 @@
+﻿@using MyWeb.Models
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<Emp>
+
+<h1>Сотрудники</h1>
+<table class="table">
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort">
+            Имя
+            </a> 
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewBag.AgeSort">
+            Возраст
+            </a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewBag.CompSort">
+            Компания
+            </a>
+        </th>
+    </tr>
+    @foreach (Emp e in Model)
+    {
+        <tr>
+            <td>
+                @e.Name
+            </td>
+            <td>
+                @e.Age
+            </td>
+            <td>
+                @e.Company.Name
+            </td>
+        </tr>
+    }
+</table>
