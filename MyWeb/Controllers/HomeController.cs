@@ -59,6 +59,30 @@ namespace MyWeb.Controllers
         }
 
         //ToDo add controller EDIT & DELETE
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id != null)
+            {
+                Emp emp = await db.Emps.FirstOrDefaultAsync(p => p.Id == id);
+                if (emp != null)
+                {
+                    ViewData["Title"] = "Редактирование сотрудника";
+                    ViewBag.company = db.Companies.ToList();
+                    return View(emp);
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Emp emp, string compName)
+        {
+            Company company = await db.Companies.FirstOrDefaultAsync(x => x.Name == compName);
+            emp.CompanyID = company.Id;
+            db.Emps.Update(emp);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
         public IActionResult Privacy()
         {
