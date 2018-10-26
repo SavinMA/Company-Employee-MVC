@@ -1,0 +1,38 @@
+﻿@model MyWeb.Models.Emp
+
+@{
+    ViewData["Title"] = "DeleteEmp";
+}
+
+<h2>Удаление сотрудника</h2>
+
+<h3>Вы действительно хотите удалить этого сотрудника?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            ФИО
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            Возраст
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Age)
+        </dd>
+        <dt>
+            Компания
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Company.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteEmp">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Удалить" class="btn btn-default" /> |
+        <a asp-action="Index">Вернуться к списку</a>
+    </form>
+</div>
