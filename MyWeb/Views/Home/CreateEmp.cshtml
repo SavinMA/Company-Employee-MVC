@@ -1,29 +1,33 @@
 ﻿@model MyWeb.Models.Emp
 
-<h2>Редактирование</h2>
+@{
+    ViewData["Title"] = "CreateEmp";
+}
+
+<h2>Добавление нового сотрудника</h2>
 
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" asp-controller="Home" asp-route-id="@Model.Id">
+        <form asp-action="CreateEmp">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">ФИО</label>
-                <input type="text" asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Age" class="control-label">Возраст</label>
-                <input type="number" asp-for="Age" class="form-control" />
+                <input asp-for="Age" class="form-control" />
                 <span asp-validation-for="Age" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CompanyID" class="control-label">Компании</label>
-                <select asp-for="CompanyID" class="form-control" asp-items="ViewBag.companies">
+                <label asp-for="CompanyID" class="control-label">Компания</label>
+                <select asp-for="CompanyID" class ="form-control" asp-items="ViewBag.companies">
                 </select>
-                <span class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-default" />
+                <input type="submit" value="Добавить" class="btn btn-default" />
             </div>
         </form>
     </div>
