@@ -74,7 +74,6 @@ namespace MyWeb.Controllers
             return RedirectToAction("Index");
         }
 
-        //ToDo add controller DELETE
         public async Task<IActionResult> Edit(int? id)
         {
             if (id != null)
@@ -97,6 +96,38 @@ namespace MyWeb.Controllers
             db.Emps.Update(emp);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        [ActionName("DeleteEmp")]
+        public async Task<IActionResult> ConfirmDelete(int? id)
+        {
+            if (id != null)
+            {
+                Emp emp = await db.Emps.FirstOrDefaultAsync(c => c.Id == id);
+                emp.Company = await db.Companies.FirstOrDefaultAsync(c => c.Id == emp.CompanyID);
+                if (emp != null)
+                {
+                    return View(emp);
+                }
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteEmp(int? id)
+        {
+            if (id != null)
+            {
+                Emp emp = await db.Emps.FirstOrDefaultAsync(c => c.Id == id);
+                if (emp != null)
+                {
+                    db.Emps.Remove(emp);
+                    await db.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+            }
+            return NotFound();
         }
 
         public IActionResult Privacy()
