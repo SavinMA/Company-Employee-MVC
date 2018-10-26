@@ -9,13 +9,6 @@ namespace MyWeb.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-
-        public List<Emp> Emps { get; set; }
-
-        public Company()
-        {
-            Emps = new List<Emp>();
-        }
     }
 
     public class Emp

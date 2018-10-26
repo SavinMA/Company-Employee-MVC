@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MyWeb.Models;
 
@@ -58,7 +59,22 @@ namespace MyWeb.Controllers
             return View(db.Companies);
         }
 
-        //ToDo add controller EDIT & DELETE
+        public IActionResult CreateEmp()
+        {
+            ViewBag.companies = new SelectList(db.Companies, "Id", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEmp(Emp emp)
+        {
+            Company company = db.Companies.FirstOrDefault(c => c.Id == emp.CompanyID);
+            db.Emps.Add(emp);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        //ToDo add controller DELETE
         public async Task<IActionResult> Edit(int? id)
         {
             if (id != null)
@@ -67,7 +83,7 @@ namespace MyWeb.Controllers
                 if (emp != null)
                 {
                     ViewData["Title"] = "Редактирование сотрудника";
-                    ViewBag.company = db.Companies.ToList();
+                    ViewBag.companies = new SelectList(db.Companies, "Id", "Name");
                     return View(emp);
                 }
             }
@@ -75,10 +91,9 @@ namespace MyWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Emp emp, string compName)
+        public async Task<IActionResult> Edit(Emp emp)
         {
-            Company company = await db.Companies.FirstOrDefaultAsync(x => x.Name == compName);
-            emp.CompanyID = company.Id;
+            Company company = db.Companies.FirstOrDefault(c => c.Id == emp.CompanyID);
             db.Emps.Update(emp);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

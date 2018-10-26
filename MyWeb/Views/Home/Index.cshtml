@@ -5,6 +5,13 @@
 @model IEnumerable<Emp>
 
 <h1>@ViewData["Message"]</h1>
+
+<a asp-action="CreateEmp" asp-controller="Home">
+    <div class="form-group">
+        <input type="button" value="Добавить сотрудника" class="btn btn-default" formaction="CreateEmp" />
+    </div>
+</a>
+    
 <table class="table">
     <tr>
         <th>
