@@ -19,9 +19,14 @@ namespace MyWeb.Controllers
             db = context;
         }
 
-        public async Task<IActionResult> Index(SortState sortOrder = SortState.NameAsc)
+        [HttpGet]
+        public ActionResult Index(int? company, string name, SortState sortOrder = SortState.NameAsc)
         {
-            IQueryable<Emp> emps = db.Emps.Include(x => x.Company);
+            IQueryable<Emp> emps = db.Emps.Include(p => p.Company);
+            if (company != null && company != 0)
+                emps = emps.Where(p => p.CompanyID == company);
+            if (!string.IsNullOrEmpty(name))
+                emps = emps.Where(p => p.Name.Contains(name));
 
             ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
             ViewData["AgeSort"] = sortOrder == SortState.AgeAsc ? SortState.AgeDesc : SortState.AgeAsc;
@@ -50,9 +55,66 @@ namespace MyWeb.Controllers
             }
             ViewData["Message"] = "Сотрудники";
 
-            return View(await emps.AsNoTracking().ToListAsync());
-        }
+            List<Company> companies = db.Companies.ToList();
+            //            List<Company> companies = db.Companies.Include(p=> p.Id == company).ToList();
 
+            companies.Insert(0, new Company { Name = "Все", Id = 0 });
+
+            EmpListViewModel viewModel = new EmpListViewModel
+            {
+                Emps = emps.ToList(),
+                Companies = new SelectList(companies, "Id", "Name"),
+                Name = name
+            };
+
+            return View(viewModel);
+        }
+/*
+        [HttpGet]
+        public IActionResult Sort(SortState sortOrder = SortState.NameAsc)
+        {
+            IQueryable<Emp> emps = emp.AsQueryable();
+
+            ViewData["NameSort"] = sortOrder == SortState.NameAsc ? SortState.NameDesc : SortState.NameAsc;
+            ViewData["AgeSort"] = sortOrder == SortState.AgeAsc ? SortState.AgeDesc : SortState.AgeAsc;
+            ViewData["CompSort"] = sortOrder == SortState.CompanyAsc ? SortState.CompanyDesc : SortState.CompanyAsc;
+            
+            switch (sortOrder)
+            {
+                case SortState.NameDesc:
+                    emps = emps.OrderByDescending(s => s.Name);
+                    break;
+                case SortState.AgeAsc:
+                    emps = emps.OrderBy(s => s.Age);
+                    break;
+                case SortState.AgeDesc:
+                    emps = emps.OrderByDescending(s => s.Age);
+                    break;
+                case SortState.CompanyAsc:
+                    emps = emps.OrderBy(s => s.Company.Name);
+                    break;
+                case SortState.CompanyDesc:
+                    emps = emps.OrderByDescending(s => s.Company.Name);
+                    break;
+                default:
+                    emps = emps.OrderBy(s => s.Name);
+                    break;
+            }
+            
+
+            List<Company> companies = db.Companies.ToList();
+            companies.Insert(0, new Company { Name = "Все", Id = 0 });
+
+            EmpListViewModel viewModel = new EmpListViewModel
+            {
+                Companies = new SelectList(db.Companies.ToList(), "Id", "Name"),
+                Emps = emps.ToList(),
+                Name = "Все"
+            };
+            
+            return View("Index", viewModel);
+        }
+        */
         public IActionResult Company()
         {
             ViewData["Message"] = "Компании";
