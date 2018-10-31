@@ -3,6 +3,7 @@
     ViewData["Title"] = "Сотрудники";
 }
 @model MyWeb.Models.IndexViewModel
+@addTagHelper "*, MyWeb"
 
 <h1>@ViewData["Message"]</h1>
 
@@ -76,28 +77,9 @@
 
 </table>
 
-@if (Model.PageViewModel.HasPreviousPage)
-{
-    <a  asp-action="Index"
-        asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
-        asp-route-name="@(Model.FilterViewModel.SelectedName)" 
-        asp-route-company="@(Model.FilterViewModel.SelectedCompany)"        
-        asp-route-sortOrder="@(Model.SortViewModel.Current)" 
-        class="btn btn-default">
-            <i class="glyphicon glyphicon-chevron-left"></i>
-            Назад
-    </a>
-}
-
-@if (Model.PageViewModel.HasNextPage)
-{
-    <a  asp-action="Index"
-        asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
-        asp-route-name="@(Model.FilterViewModel.SelectedName)" 
-        asp-route-company="@(Model.FilterViewModel.SelectedCompany)"        
-        asp-route-sortOrder="@(Model.SortViewModel.Current)" 
-        class="btn btn-default">
-        <i class="glyphicon glyphicon-chevron-right"></i>
-        Вперед
-    </a>
-}
+<page-link page-model ="Model.PageViewModel"
+           page-action="Index"
+           page-url-name="@(Model.FilterViewModel.SelectedName)"
+           page-url-company="@(Model.FilterViewModel.SelectedCompany)"
+           page-url-sortorder="@(Model.SortViewModel.Current)">
+</page-link>
