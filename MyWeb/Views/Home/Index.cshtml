@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Сотрудники";
 }
-@model MyWeb.Models.EmpListViewModel
+@model MyWeb.Models.IndexViewModel
 
 <h1>@ViewData["Message"]</h1>
 
@@ -16,52 +16,88 @@
     <div class="form-inline form-group">
         <label class="control-label">Имя: </label>
         @Html.TextBox("name",
-        Model.Name,
+        Model.FilterViewModel.SelectedName,
         htmlAttributes: new { @class = "form-control"})
 
         <label class="control-label">Компания: </label>
         @Html.DropDownList("company",
-        Model.Companies as SelectList,
+        Model.FilterViewModel.Companies as SelectList,
         htmlAttributes: new { @class = "form-control" })
 
-        <input type="submit" value="Фильтр" class="btn btn-default" />
+        <input type="submit" value="Фильтрация" class="btn btn-default" />
     </div>
 </form>
 
-    <table class="table">
+<table class="table">
+    <tr>
+        <th>
+            <a  asp-action="Index" 
+                asp-route-sortOrder="@(Model.SortViewModel.NameSort)" 
+                asp-route-name="@(Model.FilterViewModel.SelectedName)" 
+                asp-route-company="@(Model.FilterViewModel.SelectedCompany)" >
+                Имя
+            </a>
+        </th>
+        <th>
+            <a  asp-action="Index" 
+                asp-route-sortOrder="@(Model.SortViewModel.AgeSort)" 
+                asp-route-name="@(Model.FilterViewModel.SelectedName)" 
+                asp-route-company="@(Model.FilterViewModel.SelectedCompany)" >
+                Возраст
+            </a>
+        </th>
+        <th>
+            <a  asp-action="Index" 
+                asp-route-sortOrder="@(Model.SortViewModel.CompanySort)" 
+                asp-route-name="@(Model.FilterViewModel.SelectedName)" 
+                asp-route-company="@(Model.FilterViewModel.SelectedCompany)" >
+                Компания
+            </a>
+        </th>
+    </tr>
+    @foreach (Emp e in Model.Emps)
+    {
         <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.NameSort" asp-route-name="@Model.Name" asp-route-company="@Model.Companies.SelectedValue">
-                    Имя
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.AgeSort" asp-route-name="@Model.Name" asp-route-company="@Model.Companies.SelectedValue">
-                    Возраст
-                </a>
-            </th>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.CompSort" asp-route-name="@Model.Name" asp-route-company="@Model.Companies.SelectedValue">
-                    Компания
-                </a>
-            </th>
+            <td>
+                @Html.DisplayFor(modelItem => e.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => e.Company.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-controller="Home" asp-route-id="@e.Id">Изменить</a>
+                <a asp-action="DeleteEmp" asp-controller="Home" asp-route-id="@e.Id">Удалить</a>
+            </td>
         </tr>
-        @foreach (Emp e in Model.Emps)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => e.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => e.Age)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => e.Company.Name)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-controller="Home" asp-route-id="@e.Id">Изменить</a>
-                    <a asp-action="DeleteEmp" asp-controller="Home" asp-route-id="@e.Id">Удалить</a>
-                </td>
-            </tr>
-        }
-    </table>
+    }
+
+</table>
+
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a  asp-action="Index"
+        asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+        asp-route-name="@(Model.FilterViewModel.SelectedName)" 
+        asp-route-company="@(Model.FilterViewModel.SelectedCompany)"        
+        asp-route-sortOrder="@(Model.SortViewModel.Current)" 
+        class="btn btn-default">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Назад
+    </a>
+}
+
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a  asp-action="Index"
+        asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+        asp-route-name="@(Model.FilterViewModel.SelectedName)" 
+        asp-route-company="@(Model.FilterViewModel.SelectedCompany)"        
+        asp-route-sortOrder="@(Model.SortViewModel.Current)" 
+        class="btn btn-default">
+        <i class="glyphicon glyphicon-chevron-right"></i>
+        Вперед
+    </a>
+}
